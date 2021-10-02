@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Problem Solver</string>
+    <string name="empty_list_title">Please add a new problem that needs to be resolved</string>
+    <string name="add_new_suspect">Add suspect</string>
+    <string name="menu_title_new_problem">New problem</string>
+    <string name="problem_title_label">Title</string>
+    <string name="problem_title_hint">Enter a description of the problem</string>
+    <string name="problem_details_label">Details</string>
+    <string name="waiting_radio_text">Waiting</string>
+    <string name="solved_radio_text">Solved</string>
+    <string name="failed_radio_text">Failed</string>
+    <string name="choose_suspect">choose</string>
+    <string name="problem_report_text">Send Report</string>
+    <string name="call_the_suspect_dutton">Call the suspect</string>
+</resources>

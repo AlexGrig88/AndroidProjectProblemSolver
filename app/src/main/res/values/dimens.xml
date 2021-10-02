@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="problem_layout_padding">16dp</dimen>
+    <dimen name="small_margin_8">8dp</dimen>
+    <dimen name="label_size_text">12sp</dimen>
+</resources>

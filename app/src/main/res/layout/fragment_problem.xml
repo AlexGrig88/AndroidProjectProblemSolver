@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/problem_layout_padding"
+    android:layout_margin="@dimen/small_margin_8">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/problem_title_label"
+        android:textSize="@dimen/label_size_text"
+        style="?android:listSeparatorTextViewStyle"/>
+    <EditText
+        android:id="@+id/problemTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/problem_title_hint" />
+    <TextView
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/label_size_text"
+        android:text="@string/problem_details_label"/>
+    <Button
+        android:id="@+id/problemDateButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Wed Nov 14 11:56 EST 2018"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroupState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/waitingState"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/waiting_radio_text"/>
+        <RadioButton
+            android:id="@+id/solvedState"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/solved_radio_text"/>
+        <RadioButton
+            android:id="@+id/failedState"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/failed_radio_text"/>
+    </RadioGroup>
+
+    <TextView
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/label_size_text"
+        android:layout_marginTop="20dp"
+        android:text="Подозреваемый:"/>
+
+    <Button
+        android:id="@+id/crimeSuspectButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/ic_contact_24"
+        android:text="@string/choose_suspect"/>
+    <Button
+        android:id="@+id/crimeReportButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/problem_report_text"/>
+    <Button
+        android:id="@+id/callButton"
+        android:layout_width="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_height="wrap_content"
+        android:text="@string/call_the_suspect_dutton"/>
+
+
+
+
+</LinearLayout>
