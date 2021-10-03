@@ -3,6 +3,7 @@ package com.alexgrig.education.problemsolver.fragments
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.alexgrig.education.problemsolver.R
@@ -11,7 +12,13 @@ import com.alexgrig.education.problemsolver.entities.Problem
 import com.alexgrig.education.problemsolver.utils.StateOfProblem
 import java.util.*
 
+//листенеры для popupMenu
+interface ProblemActionListener {
 
+    fun onProblemMove(problem: Problem, moveTo: Int)
+
+    fun onProblemDelete(problem: Problem)
+}
 
 //===================DiffUtil.Callback====================================
 class CrimesDiffCallback(
@@ -37,9 +44,10 @@ class CrimesDiffCallback(
 //===================DiffUtil.Callback====================================
 
 class ProblemAdapter(_problems: List<Problem>) :
-    RecyclerView.Adapter<ProblemAdapter.ProblemHolder>() {
+    RecyclerView.Adapter<ProblemAdapter.ProblemHolder>(), View.OnClickListener {
 
     var callbacks: Callbacks? = null
+    var actionListener: ProblemActionListener? = null
 
     private var problems: List<Problem> = _problems
         set(newValue) {
@@ -54,50 +62,49 @@ class ProblemAdapter(_problems: List<Problem>) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProblemHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemListProblemBinding.inflate(inflater, parent, false)
+
+        binding.root.setOnClickListener(this)
+        binding.moreImageView.setOnClickListener(this)
+
         return ProblemHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ProblemHolder, position: Int) {
-       holder.bind(problems[position])
+        val problem = problems[position]
+
+        holder.itemView.tag = problem
+        with(holder.binding) {
+            moreImageView.tag = problem
+            problemTitleItem.text = problem.title
+            problemDateItem.text = problem.getSimpleDate()
+            val suspectName = if (problem.suspect.isNotBlank()) problem.suspect else "not chosen"
+            suspectNameForList.text = suspectNameForList.text.toString() + suspectName
+
+            when(problem.state) {
+                StateOfProblem.Waiting -> problemStateInnerImage.setImageResource(R.drawable.ic_waiting_24)
+                StateOfProblem.Solved -> problemStateInnerImage.setImageResource(R.drawable.ic_solved_24)
+                StateOfProblem.Failed -> problemStateInnerImage.setImageResource(R.drawable.ic_failed_24)
+            }
+        }
     }
 
     override fun getItemCount(): Int = problems.size
 
     //======================ViewHolder class===================================
-    inner class ProblemHolder(private val binding: ItemListProblemBinding) :
-        RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+    inner class ProblemHolder(val binding: ItemListProblemBinding) :
+        RecyclerView.ViewHolder(binding.root)
+    //=========================================================================
 
-        private lateinit var problem: Problem
-
-        init {
-            itemView.setOnClickListener(this)
-        }
-
-        fun bind(problem: Problem) {
-            this.problem = problem
-            binding.apply {
-                problemTitleItem.text = problem.title
-                problemDateItem.text = problem.getSimpleDate()
-                suspectNameForList.text = suspectNameForList.text.toString() + if (problem.suspect.isNotBlank()) {
-                    problem.suspect
-                } else {
-                    "not chosen"
-                }
-                when(problem.state) {
-//                StateOfProblem.Waiting -> binding.problemStateImg.setImageResource(R.drawable.ic_waiting_24)
-//                StateOfProblem.Solved -> binding.problemStateImg.setImageResource(R.drawable.ic_solved_24)
-//                StateOfProblem.Failed -> binding.problemStateImg.setImageResource(R.drawable.ic_failed_24)
-                    StateOfProblem.Waiting -> problemStateInnerImage.setImageResource(R.drawable.ic_waiting_24)
-                    StateOfProblem.Solved -> problemStateInnerImage.setImageResource(R.drawable.ic_solved_24)
-                    StateOfProblem.Failed -> problemStateInnerImage.setImageResource(R.drawable.ic_failed_24)
-                }
+    override fun onClick(view: View) {
+        val problem = view.tag as Problem
+        when (view.id) {
+            R.id.moreImageView -> {
+                //showPopupMenu(view)
+                Toast.makeText(view.context, "Tuppppp", Toast.LENGTH_SHORT).show()
+            }
+            else -> {
+                callbacks?.onProblemSelected(problem.id)
             }
         }
-
-        override fun onClick(v: View?) {
-            callbacks?.onProblemSelected(this.problem.id)
-        }
-
     }
-    //=========================================================================
 }

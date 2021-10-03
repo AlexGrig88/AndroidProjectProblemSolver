@@ -3,12 +3,14 @@ package com.alexgrig.education.problemsolver
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.alexgrig.education.problemsolver.databinding.ActivityMainBinding
+import com.alexgrig.education.problemsolver.entities.Problem
 import com.alexgrig.education.problemsolver.fragments.Callbacks
+import com.alexgrig.education.problemsolver.fragments.ProblemActionListener
 import com.alexgrig.education.problemsolver.fragments.ProblemFragment
 import com.alexgrig.education.problemsolver.fragments.ProblemListFragment
 import java.util.*
 
-class MainActivity : AppCompatActivity(), Callbacks {
+class MainActivity : AppCompatActivity(), Callbacks, ProblemActionListener {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -32,5 +34,13 @@ class MainActivity : AppCompatActivity(), Callbacks {
             .replace(R.id.fragmentContainer, ProblemFragment.newInstance(problemId))
             .addToBackStack(null)
             .commit()
+    }
+
+    override fun onProblemMove(problem: Problem, moveTo: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onProblemDelete(problem: Problem) {
+        TODO("Not yet implemented")
     }
 }
