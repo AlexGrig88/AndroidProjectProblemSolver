@@ -62,25 +62,25 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/label_size_text"
         android:layout_marginTop="20dp"
-        android:text="Подозреваемый:"/>
+        android:text="@string/suspect_label"/>
 
     <Button
-        android:id="@+id/crimeSuspectButton"
+        android:id="@+id/chooseSuspectButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableEnd="@drawable/ic_contact_24"
         android:text="@string/choose_suspect"/>
     <Button
-        android:id="@+id/crimeReportButton"
+        android:id="@+id/sendReportButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/problem_report_text"/>
     <Button
-        android:id="@+id/callButton"
+        android:id="@+id/callSuspectButton"
         android:layout_width="match_parent"
         android:layout_marginTop="30dp"
         android:layout_height="wrap_content"
-        android:text="@string/call_the_suspect_dutton"/>
+        android:text="@string/call_the_suspect_button"/>
 
 
 

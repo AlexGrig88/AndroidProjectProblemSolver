@@ -52,7 +52,7 @@ class ProblemListFragment : Fragment() {
 
         problemRecyclerView = binding.problemRecyclerView
         problemRecyclerView.layoutManager = LinearLayoutManager(context)
-        //важно не забыть передать в адаптер callback полученный при прикреплении фрагмента
+        //не забыть передать в адаптер callback полученный при прикреплении фрагмента
         adapter.callbacks = callbacksAsContext
         problemRecyclerView.adapter = adapter
 

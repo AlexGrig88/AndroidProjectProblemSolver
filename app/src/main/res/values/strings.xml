@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Problem Solver</string>
-    <string name="empty_list_title">Please add a new problem that needs to be resolved</string>
+    <string name="empty_list_title">
+        Hello my friend!
+        This application will help you solve various problems that arise in your life.
+        Please add a new problem that needs to be resolved.
+    </string>
+
     <string name="add_new_suspect">Add suspect</string>
     <string name="menu_title_new_problem">New problem</string>
     <string name="problem_title_label">Title</string>
@@ -11,5 +16,20 @@
     <string name="failed_radio_text">Failed</string>
     <string name="choose_suspect">choose</string>
     <string name="problem_report_text">Send Report</string>
-    <string name="call_the_suspect_dutton">Call the suspect</string>
+    <string name="call_the_suspect_button">Call the suspect</string>
+
+    <string name="state_problem_waiting">The problem awaits solution.</string>
+    <string name="state_problem_solved">Problem solved.</string>
+    <string name="state_problem_failed">Problem solution failed.</string>
+    <string name="problem_report_no_suspect">No suspect.</string>
+    <string name="problem_report_suspect">"This suspect is %s."</string>
+
+    <string name="problem_report">%1$s!
+        The problem was resolved on %2$s. %3$s %4$s
+    </string>
+
+    <string name="no_permissions">Permission denied...</string>
+    <string name="problem_report_subject">ProblemSolver Report</string>
+    <string name="send_report_using">Send report using</string>
+    <string name="suspect_label">Suspect:</string>
 </resources>

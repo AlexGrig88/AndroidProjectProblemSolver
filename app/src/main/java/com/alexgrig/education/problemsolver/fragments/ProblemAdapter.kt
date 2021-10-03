@@ -75,12 +75,22 @@ class ProblemAdapter(_problems: List<Problem>) :
 
         fun bind(problem: Problem) {
             this.problem = problem
-            binding.problemTitleItem.text = problem.title
-            binding.problemDateItem.text = problem.getSimpleDate()
-            when(problem.state) {
-                StateOfProblem.Waiting -> binding.problemStateImg.setImageResource(R.drawable.ic_waiting_24)
-                StateOfProblem.Solved -> binding.problemStateImg.setImageResource(R.drawable.ic_solved_24)
-                StateOfProblem.Failed -> binding.problemStateImg.setImageResource(R.drawable.ic_failed_24)
+            binding.apply {
+                problemTitleItem.text = problem.title
+                problemDateItem.text = problem.getSimpleDate()
+                suspectNameForList.text = suspectNameForList.text.toString() + if (problem.suspect.isNotBlank()) {
+                    problem.suspect
+                } else {
+                    "not chosen"
+                }
+                when(problem.state) {
+//                StateOfProblem.Waiting -> binding.problemStateImg.setImageResource(R.drawable.ic_waiting_24)
+//                StateOfProblem.Solved -> binding.problemStateImg.setImageResource(R.drawable.ic_solved_24)
+//                StateOfProblem.Failed -> binding.problemStateImg.setImageResource(R.drawable.ic_failed_24)
+                    StateOfProblem.Waiting -> problemStateInnerImage.setImageResource(R.drawable.ic_waiting_24)
+                    StateOfProblem.Solved -> problemStateInnerImage.setImageResource(R.drawable.ic_solved_24)
+                    StateOfProblem.Failed -> problemStateInnerImage.setImageResource(R.drawable.ic_failed_24)
+                }
             }
         }
 

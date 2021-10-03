@@ -11,27 +11,35 @@
         android:id="@+id/problemTitleItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:text="Problem Title"
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/problemStateImg"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/frameLayout"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/problemDateItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Problem Date"
         app:layout_constraintEnd_toStartOf="@+id/problemStateImg"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/problemTitleItem"
         app:layout_constraintTop_toBottomOf="@+id/problemTitleItem" />
+    <TextView
+        android:id="@+id/suspectNameForList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Suspect: "
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/problemDateItem"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/problemTitleItem"/>
 
     <ImageView
         android:id="@+id/problemStateImg"
@@ -43,7 +51,43 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_solved_36" />
+        app:srcCompat="@drawable/ic_more_vert_24" />
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/problemAvatarImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_problem_avatar_48" />
+        <ImageView
+            android:id="@+id/problemStateInnerImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_waiting_24" />
+
+    </FrameLayout>
+
+<!--    <androidx.constraintlayout.widget.Barrier-->
+<!--        android:id="@+id/barrier"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:constraint_referenced_ids="frameLayout, suspectName"-->
+<!--        app:barrierDirection="bottom"/>-->
+
+<!--    <Space-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="6dp"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/barrier"/>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

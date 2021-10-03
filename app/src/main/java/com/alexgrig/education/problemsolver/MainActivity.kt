@@ -33,9 +33,4 @@ class MainActivity : AppCompatActivity(), Callbacks {
             .addToBackStack(null)
             .commit()
     }
-
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return true
-    }
 }
