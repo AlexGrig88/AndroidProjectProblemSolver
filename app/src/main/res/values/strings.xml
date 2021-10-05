@@ -32,4 +32,9 @@
     <string name="problem_report_subject">ProblemSolver Report</string>
     <string name="send_report_using">Send report using</string>
     <string name="suspect_label">Suspect:</string>
+
+
+    <string name="move_up">Move up</string>
+    <string name="move_down">Move down</string>
+    <string name="remove_text_popupmenu">Remove</string>
 </resources>

@@ -1,8 +1,10 @@
 package com.alexgrig.education.problemsolver.fragments
 
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -12,12 +14,15 @@ import com.alexgrig.education.problemsolver.entities.Problem
 import com.alexgrig.education.problemsolver.utils.StateOfProblem
 import java.util.*
 
-//листенеры для popupMenu
 interface ProblemActionListener {
 
-    fun onProblemMove(problem: Problem, moveTo: Int)
-
     fun onProblemDelete(problem: Problem)
+
+    fun onProblemSelected(problemId: UUID)
+}
+
+interface ProblemItemMovable {
+    fun onProblemMove(problem: Problem, moveTo: Int)
 }
 
 //===================DiffUtil.Callback====================================
@@ -46,7 +51,7 @@ class CrimesDiffCallback(
 class ProblemAdapter(_problems: List<Problem>) :
     RecyclerView.Adapter<ProblemAdapter.ProblemHolder>(), View.OnClickListener {
 
-    var callbacks: Callbacks? = null
+    var problemMovable: ProblemItemMovable? = null
     var actionListener: ProblemActionListener? = null
 
     private var problems: List<Problem> = _problems
@@ -99,12 +104,52 @@ class ProblemAdapter(_problems: List<Problem>) :
         val problem = view.tag as Problem
         when (view.id) {
             R.id.moreImageView -> {
-                //showPopupMenu(view)
-                Toast.makeText(view.context, "Tuppppp", Toast.LENGTH_SHORT).show()
+                showPopupMenu(view)
+                //Toast.makeText(view.context, "Tuppppp", Toast.LENGTH_SHORT).show()
             }
             else -> {
-                callbacks?.onProblemSelected(problem.id)
+                actionListener?.onProblemSelected(problem.id)
             }
         }
     }
+
+    private fun showPopupMenu(view: View) {
+        val popupMenu = PopupMenu(view.context, view)
+        val context = view.context
+        val problem = view.tag as Problem
+        val position = problems.indexOfFirst { it.id == problem.id }
+
+        popupMenu.menu.add(1, ID_MOVE_UP, Menu.NONE, context.getString(R.string.move_up)).apply {
+            isEnabled = position > 0
+        }
+        popupMenu.menu.add(3, ID_MOVE_DOWN, Menu.NONE, context.getString(R.string.move_down)).apply {
+            isEnabled = position < problems.size - 1
+        }
+        popupMenu.menu.add(6, ID_REMOVE, Menu.NONE, context.getString(R.string.remove_text_popupmenu))
+
+        popupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                ID_MOVE_UP -> {
+                    problemMovable?.onProblemMove(problem, -1)
+                }
+                ID_MOVE_DOWN -> {
+                    problemMovable?.onProblemMove(problem, 1)
+                }
+                ID_REMOVE -> {
+                    actionListener?.onProblemDelete(problem)
+                }
+            }
+            return@setOnMenuItemClickListener true
+        }
+
+        popupMenu.show()
+
+    }
+
+    companion object {
+        private const val ID_MOVE_UP = 1
+        private const val ID_MOVE_DOWN = 2
+        private const val ID_REMOVE = 3
+    }
+
 }

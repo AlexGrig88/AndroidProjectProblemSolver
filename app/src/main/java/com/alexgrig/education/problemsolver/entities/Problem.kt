@@ -17,4 +17,8 @@ data class Problem(
 ) {
 
     fun getSimpleDate(): String = DateFormat.getDateInstance(DateFormat.LONG).format(date)
+
+    override fun toString(): String {
+        return "Problem(id = ${id})"
+    }
 }

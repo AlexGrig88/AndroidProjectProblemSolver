@@ -11,6 +11,7 @@ import android.provider.ContactsContract
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,7 +48,7 @@ class ProblemFragment: Fragment(), DatePickerDialogFragment.Callbacks {
     ): View? {
         binding = FragmentProblemBinding.inflate(inflater, container, false)
         binding.waitingState.isChecked = true
-
+        Log.i(TAG, "id = ${problem.id}")
 
         return binding.root
     }
@@ -287,6 +288,7 @@ class ProblemFragment: Fragment(), DatePickerDialogFragment.Callbacks {
 
     ////////////////////////  STATIC CONTEXT  /////////////////////////////////
     companion object {
+        private const val TAG = "Problem fragment"
         private const val ARG_PROBLEM_ID = "problem id argument"
         private const val DIALOG_DATE = "DialogDate"
         private const val DATE_FORMAT = "EEE, MMM, dd"

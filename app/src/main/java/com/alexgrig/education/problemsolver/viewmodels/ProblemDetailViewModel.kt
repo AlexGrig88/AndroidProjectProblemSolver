@@ -26,4 +26,8 @@ class ProblemDetailViewModel : ViewModel() {
         problemRepository.updateProblem(problem)
     }
 
+    fun deleteProblem(problem: Problem) {
+        problemRepository.deleteProblem(problem)
+    }
+
 }

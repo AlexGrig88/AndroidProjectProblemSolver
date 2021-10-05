@@ -43,6 +43,12 @@ class ProblemRepository private constructor(context: Context) {
         }
     }
 
+    fun deleteProblem(problem: Problem) {
+        executor.execute {
+            problemDao.deleteProblem(problem)
+        }
+    }
+
     //не берём размер списка из allProblems, потому что нам не нужен доступ к LiveData
     //Нам нужно получить статическую инфу при начальной загрузке база данных
     fun getSizeRepository(): Int {
