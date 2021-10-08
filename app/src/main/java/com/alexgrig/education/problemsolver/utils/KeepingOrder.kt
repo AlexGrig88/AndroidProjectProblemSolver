@@ -10,7 +10,7 @@ class KeepingOrder {
 
     companion object {
 
-        fun restoreOrder(preferences: SharedPreferences, problemList: List<Problem>): List<Problem> {
+        fun restoreOrder(preferences: SharedPreferences, problemList: MutableList<Problem>): MutableList<Problem> {
 
 
             var resultList = ArrayList<Problem>()

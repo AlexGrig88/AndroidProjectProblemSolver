@@ -1,20 +1,15 @@
 package com.alexgrig.education.problemsolver
 
 import android.content.Context
-import android.content.SharedPreferences
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.FragmentResultListener
 import com.alexgrig.education.problemsolver.databinding.ActivityMainBinding
 import com.alexgrig.education.problemsolver.entities.Problem
-import com.alexgrig.education.problemsolver.fragments.ProblemActionListener
-import com.alexgrig.education.problemsolver.fragments.ProblemFragment
-import com.alexgrig.education.problemsolver.fragments.ProblemListFragment
-import com.alexgrig.education.problemsolver.utils.KeepingOrder
+import com.alexgrig.education.problemsolver.fragments.*
 import com.alexgrig.education.problemsolver.viewmodels.ProblemDetailViewModel
-import com.alexgrig.education.problemsolver.viewmodels.ProblemListViewModel
 import java.util.*
 
 const val ORDER_PREFERENCES = "order preferences"
@@ -39,7 +34,6 @@ class MainActivity : AppCompatActivity(), ProblemActionListener {
                 .add(R.id.fragmentContainer, ProblemListFragment.newInstance())
                 .commit()
         }
-
     }
 
     override fun onProblemSelected(problemId: UUID) {
@@ -51,15 +45,9 @@ class MainActivity : AppCompatActivity(), ProblemActionListener {
     }
 
     override fun onProblemDelete(problem: Problem) {
-
-        val preferences = getSharedPreferences(ORDER_PREFERENCES, Context.MODE_PRIVATE)
-        //получаем наши preferences удаляем id переданного problem и перезаписываем обновлённые preferences
-        val list = preferences.getString(SET_ORDERED_IDs_VALUE, "")!!.split(", ").toMutableList()
-        list.remove(problem.id.toString())
-        preferences.edit()
-            .putString(SET_ORDERED_IDs_VALUE, list.joinToString())
-            .apply()
-
-        problemDetailViewModel.deleteProblem(problem)
+        //удаление problem происходит в обработчике события диалога (в классе ConfirmationDialogFragment)
+        val dialogFragment = ConfirmationDialogFragment.newInstance(problem)
+        dialogFragment.show(supportFragmentManager, ConfirmationDialogFragment.TAG)
     }
+
 }

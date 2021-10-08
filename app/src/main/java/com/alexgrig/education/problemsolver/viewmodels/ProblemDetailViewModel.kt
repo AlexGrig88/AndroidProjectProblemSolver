@@ -7,6 +7,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.alexgrig.education.problemsolver.ProblemRepository
 import com.alexgrig.education.problemsolver.entities.Problem
+import java.io.File
 import java.util.*
 
 class ProblemDetailViewModel : ViewModel() {
@@ -29,5 +30,10 @@ class ProblemDetailViewModel : ViewModel() {
     fun deleteProblem(problem: Problem) {
         problemRepository.deleteProblem(problem)
     }
+
+    fun getPhotoFile(problem: Problem): File {
+        return problemRepository.getPhotoFile(problem)
+    }
+
 
 }

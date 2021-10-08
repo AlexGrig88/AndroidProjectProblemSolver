@@ -30,7 +30,6 @@ class ProblemListFragment : Fragment(), ProblemItemMovable {
     private lateinit var problemRecyclerView: RecyclerView
 
     private var counterProblems = 0
-    private var isFirstCreatingView = false
     private lateinit var orderedPreferences: SharedPreferences
 
     override fun onAttach(context: Context) {
@@ -92,7 +91,7 @@ class ProblemListFragment : Fragment(), ProblemItemMovable {
         binding.apply {
             addCrimeButtonFloating.setOnClickListener {
                 val problem = Problem()
-                problemListViewModel.addProblem(problem)
+                onClickAddProblem(problem)
                 actionListenerAsContext?.onProblemSelected(problem.id)
                 counterProblems++
             }
@@ -101,18 +100,13 @@ class ProblemListFragment : Fragment(), ProblemItemMovable {
 
     private fun updateUI(problemList: List<Problem>) {
 
-        problemListViewModel.orderedList = KeepingOrder.restoreOrder(orderedPreferences, problemList)
+        problemListViewModel.orderedList = KeepingOrder.restoreOrder(orderedPreferences, problemList.toMutableList())
         Log.i(TAG, "orderedList = ${problemListViewModel.orderedList}\n")
         adapter = ProblemAdapter(problemListViewModel.orderedList).apply { actionListener =
             this@ProblemListFragment.actionListenerAsContext
         }
         adapter.problemMovable = this
         problemRecyclerView.adapter = adapter
-    }
-
-    private fun printOrderFromPreferences() {
-        val setPrefer = orderedPreferences.getString(SET_ORDERED_IDs_VALUE, "")
-        Log.i(TAG, "item = $setPrefer\n")
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -124,7 +118,7 @@ class ProblemListFragment : Fragment(), ProblemItemMovable {
         return when (item.itemId) {
             R.id.newProblem -> {
                 val problem = Problem()
-                problemListViewModel.addProblem(problem)
+                onClickAddProblem(problem)
                 actionListenerAsContext?.onProblemSelected(problem.id)
                 counterProblems++
                 true
@@ -132,6 +126,16 @@ class ProblemListFragment : Fragment(), ProblemItemMovable {
 
             else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun onClickAddProblem(problem: Problem) {
+        problemListViewModel.orderedList.add(problem)
+        val problemList = problemListViewModel.orderedList
+        orderedPreferences.edit()
+            .putString(SET_ORDERED_IDs_VALUE, problemList.joinToString { p -> p.id.toString() })
+            .apply()
+
+        problemListViewModel.addProblem(problem)
     }
 
     override fun onDetach() {

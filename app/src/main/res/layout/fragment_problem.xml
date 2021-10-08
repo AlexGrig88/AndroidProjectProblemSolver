@@ -8,17 +8,52 @@
     android:padding="@dimen/problem_layout_padding"
     android:layout_margin="@dimen/small_margin_8">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/problem_title_label"
-        android:textSize="@dimen/label_size_text"
-        style="?android:listSeparatorTextViewStyle"/>
-    <EditText
-        android:id="@+id/problemTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/problem_title_hint" />
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/photoImageView"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="centerInside"
+                android:cropToPadding="true"
+                android:background="@android:color/darker_gray"/>
+
+            <ImageButton
+                android:id="@+id/photoButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_camera"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/problem_title_label"
+                android:textSize="@dimen/label_size_text"
+                style="?android:listSeparatorTextViewStyle"/>
+            <EditText
+                android:id="@+id/problemTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/problem_title_hint" />
+        </LinearLayout>
+    </LinearLayout>
+
+
     <TextView
         style="?android:listSeparatorTextViewStyle"
         android:layout_width="match_parent"

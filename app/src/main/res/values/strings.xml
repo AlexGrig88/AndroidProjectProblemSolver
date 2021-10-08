@@ -37,4 +37,12 @@
     <string name="move_up">Move up</string>
     <string name="move_down">Move down</string>
     <string name="remove_text_popupmenu">Remove</string>
+    <string name="have_permissions">You can now use the camera. Click on the button and see the result!</string>
+    <string name="title_photo_dialog">Your photo for proof</string>
+    <string name="dialog_action_yes">Yes</string>
+    <string name="toast_no_photo">Нou haven\'t taken a photo yet</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="text_query_on_delete_problem">Are you sure you want to remove this problem from the list</string>
+    <string name="yes">Yes</string>
+    <string name="no">no</string>
 </resources>

@@ -13,7 +13,7 @@ class ProblemListViewModel : ViewModel() {
     val problemListLiveData = problemRepository.getProblems()
 
     fun getSize(): Int = problemRepository.getSizeRepository()
-    var orderedList: List<Problem> = emptyList()
+    var orderedList: MutableList<Problem> = ArrayList<Problem>()
 
     fun addProblem(problem: Problem) {
         problemRepository.addProblem(problem)

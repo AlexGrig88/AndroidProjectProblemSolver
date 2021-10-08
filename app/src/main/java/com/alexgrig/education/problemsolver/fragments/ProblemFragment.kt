@@ -2,12 +2,17 @@ package com.alexgrig.education.problemsolver.fragments
 
 import android.Manifest
 import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
@@ -15,9 +20,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.viewModels
 import com.alexgrig.education.problemsolver.databinding.FragmentProblemBinding
 import com.alexgrig.education.problemsolver.entities.Problem
@@ -25,6 +33,8 @@ import com.alexgrig.education.problemsolver.viewmodels.ProblemDetailViewModel
 import androidx.lifecycle.Observer
 import com.alexgrig.education.problemsolver.R
 import com.alexgrig.education.problemsolver.utils.StateOfProblem
+import com.alexgrig.education.problemsolver.utils.getScaledBitmap
+import java.io.File
 import java.util.*
 
 class ProblemFragment: Fragment(), DatePickerDialogFragment.Callbacks {
@@ -32,6 +42,11 @@ class ProblemFragment: Fragment(), DatePickerDialogFragment.Callbacks {
     private lateinit var binding: FragmentProblemBinding
     lateinit var problem: Problem
     private val problemDetailViewModel by viewModels<ProblemDetailViewModel>()
+
+    private lateinit var photoFile: File
+    private lateinit var photoUri: Uri
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +65,8 @@ class ProblemFragment: Fragment(), DatePickerDialogFragment.Callbacks {
         binding.waitingState.isChecked = true
         Log.i(TAG, "id = ${problem.id}")
 
+        //setupSimpleDialogFragmentListener()
+
         return binding.root
     }
 
@@ -63,6 +80,11 @@ class ProblemFragment: Fragment(), DatePickerDialogFragment.Callbacks {
             Observer { problem ->
                 problem?.let {
                     this.problem = problem
+                    photoFile = problemDetailViewModel.getPhotoFile(problem)
+                    photoUri = FileProvider.getUriForFile(
+                        requireActivity(),
+                        "com.alexgrig.education.problemsolver.fileprovider",
+                        photoFile)
                     updateUI()
                 }
             }
@@ -85,8 +107,18 @@ class ProblemFragment: Fragment(), DatePickerDialogFragment.Callbacks {
                 callSuspectButton.isEnabled = true
             }
         }
-
+        updatePhotoView()
     }
+
+    private fun updatePhotoView() {
+        if (photoFile.exists()) {
+            val bitmap = getScaledBitmap(photoFile.path, requireActivity())
+            binding.photoImageView.setImageBitmap(bitmap)
+        } else {
+            binding.photoImageView.setImageDrawable(null)
+        }
+    }
+
 
     override fun onStart() {
         super.onStart()
@@ -170,6 +202,62 @@ class ProblemFragment: Fragment(), DatePickerDialogFragment.Callbacks {
                 }
             }
         }
+
+
+        binding.photoButton.apply {
+            val packageManager: PackageManager = requireActivity().packageManager
+
+            val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+            val resolvedActivity: ResolveInfo? =
+                packageManager.resolveActivity(captureImage,
+                    PackageManager.MATCH_DEFAULT_ONLY)
+            if (resolvedActivity == null) {
+                isEnabled = false
+            }
+
+            setOnClickListener {
+                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                    captureImage.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+
+                    val cameraActivities: List<ResolveInfo> =
+                        packageManager.queryIntentActivities(
+                            captureImage,
+                            PackageManager.MATCH_DEFAULT_ONLY
+                        )
+
+                    for (cameraActivity in cameraActivities) {
+                        requireActivity().grantUriPermission(
+                            cameraActivity.activityInfo.packageName,
+                            photoUri,
+                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                        )
+                    }
+
+                    startActivityForResult(captureImage, REQUEST_PHOTO)
+                } else {
+                    requestPermissions(arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_CODE)
+                }
+            }
+        }
+
+        binding.photoImageView.setOnClickListener {
+            //проверка, что установлено фото в ImageView
+            val drawable = (it as ImageView).drawable
+            val hasPhoto = drawable != null && (drawable as BitmapDrawable).bitmap != null
+            if (hasPhoto) {
+                showPhotoDialogFragment()
+            } else {
+                Toast.makeText(requireContext(), getString(R.string.toast_no_photo), Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun showPhotoDialogFragment() {
+        val bitmap: Bitmap = getScaledBitmap(photoFile.path, requireActivity())
+        val dialogFragment = PhotoDialogFragment.newInstance(bitmap)
+        dialogFragment.show(parentFragmentManager, PhotoDialogFragment.TAG)
     }
 
     override fun onRequestPermissionsResult(
@@ -199,7 +287,19 @@ class ProblemFragment: Fragment(), DatePickerDialogFragment.Callbacks {
                     startActivityForResult(callIntent, REQUEST_PHONE)
 
                 } else {
-                    Toast.makeText(requireContext(), "Permission denied...", Toast.LENGTH_SHORT)
+                    Toast.makeText(requireContext(), getString(R.string.no_permissions), Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+            CAMERA_PERMISSION_CODE -> {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Toast.makeText(requireContext(), getString(R.string.have_permissions), Toast.LENGTH_LONG)
+                        .show()
+
+                } else {
+                    Toast.makeText(requireContext(), getString(R.string.no_permissions), Toast.LENGTH_SHORT)
                         .show()
                 }
             }
@@ -238,6 +338,12 @@ class ProblemFragment: Fragment(), DatePickerDialogFragment.Callbacks {
                     binding.chooseSuspectButton.text = suspectName
                 }
             }
+
+            requestCode == REQUEST_PHOTO -> {
+                requireActivity().revokeUriPermission(photoUri,
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                updatePhotoView()
+            }
         }
     }
 
@@ -264,6 +370,13 @@ class ProblemFragment: Fragment(), DatePickerDialogFragment.Callbacks {
     override fun onStop() {
         super.onStop()
         problemDetailViewModel.saveProblem(problem)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        requireActivity().revokeUriPermission(photoUri,
+            Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+
     }
 
 
@@ -295,8 +408,10 @@ class ProblemFragment: Fragment(), DatePickerDialogFragment.Callbacks {
         private const val REQUEST_DATE_CODE = 0
         private const val REQUEST_CONTACT = 1
         private const val REQUEST_PHONE = 2
+        private const val REQUEST_PHOTO = 3
         private const val CONTACT_PERMISSION_CODE = 112
         private const val PHONE_PERMISSION_CODE = 113
+        private const val CAMERA_PERMISSION_CODE = 114
 
 
         val contactIntent = Intent(Intent.ACTION_PICK).apply {

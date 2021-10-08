@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.alexgrig.education.problemsolver.database.ProblemDatabase
 import com.alexgrig.education.problemsolver.entities.Problem
+import java.io.File
 import java.lang.IllegalStateException
 import java.util.*
 import java.util.concurrent.Callable
@@ -19,8 +20,11 @@ class ProblemRepository private constructor(context: Context) {
     ).build()
 
     private val problemDao = database.problemDao()
-    private val executor = Executors.newSingleThreadExecutor()
     private val allProblems: LiveData<List<Problem>>
+
+    private val executor = Executors.newSingleThreadExecutor()
+    private val filesDir = context.applicationContext.filesDir
+
 
     init {
         allProblems = problemDao.getProblems()
@@ -57,6 +61,8 @@ class ProblemRepository private constructor(context: Context) {
         size = future.get()
         return size
     }
+
+    fun getPhotoFile(problem: Problem): File = File(filesDir, problem.photoFileName)
 
 
 
