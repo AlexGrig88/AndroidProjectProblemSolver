@@ -48,13 +48,12 @@ class CrimesDiffCallback(
 }
 //===================DiffUtil.Callback====================================
 
-class ProblemAdapter(_problems: List<Problem>) :
+class ProblemAdapter(var actionListener: ProblemActionListener?) :
     RecyclerView.Adapter<ProblemAdapter.ProblemHolder>(), View.OnClickListener {
 
     var problemMovable: ProblemItemMovable? = null
-    var actionListener: ProblemActionListener? = null
 
-    private var problems: List<Problem> = _problems
+    var problems: List<Problem> = emptyList()
         set(newValue) {
             val diffCallback = CrimesDiffCallback(field, newValue)
             val diffResult = DiffUtil.calculateDiff(diffCallback)

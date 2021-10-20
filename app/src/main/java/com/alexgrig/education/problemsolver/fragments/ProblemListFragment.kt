@@ -26,7 +26,7 @@ class ProblemListFragment : Fragment(), ProblemItemMovable {
     private val problemListViewModel by viewModels<ProblemListViewModel>()
 
     private var actionListenerAsContext: ProblemActionListener? = null
-    private var adapter: ProblemAdapter = ProblemAdapter(emptyList())
+    private lateinit var adapter: ProblemAdapter
     private lateinit var problemRecyclerView: RecyclerView
 
     private var counterProblems = 0
@@ -58,7 +58,9 @@ class ProblemListFragment : Fragment(), ProblemItemMovable {
         problemRecyclerView.layoutManager = LinearLayoutManager(context)
 
         //не забыть передать в адаптер callback полученный при прикреплении фрагмента
-        adapter.actionListener = actionListenerAsContext
+        adapter = ProblemAdapter(actionListenerAsContext)
+        adapter.problemMovable = this  //реализация метода в данном классе
+
         problemRecyclerView.adapter = adapter
 
         binding.emptyMsg.visibility = if (counterProblems == 0) {
@@ -102,11 +104,9 @@ class ProblemListFragment : Fragment(), ProblemItemMovable {
 
         problemListViewModel.orderedList = KeepingOrder.restoreOrder(orderedPreferences, problemList.toMutableList())
         Log.i(TAG, "orderedList = ${problemListViewModel.orderedList}\n")
-        adapter = ProblemAdapter(problemListViewModel.orderedList).apply { actionListener =
-            this@ProblemListFragment.actionListenerAsContext
-        }
-        adapter.problemMovable = this
+        adapter.problems = problemListViewModel.orderedList
         problemRecyclerView.adapter = adapter
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
